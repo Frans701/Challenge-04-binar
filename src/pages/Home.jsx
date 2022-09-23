@@ -195,6 +195,57 @@ export default function Home() {
             handleUpdateCheck={handleUpdateCheck}
           />
         ))}
+
+        <div className="flex justify-between mt-3">
+          <button
+            className="flex justify-center btn inline-block  xl:w-[48%] px-6 py-2.5 bg-red-600 text-white font-medium text-xs leading-tight uppercase  hover:bg-red-700 focus:bg-red-700   focus:outline-none focus:ring-0 active:bg-red-800  transition duration-150 ease-in-out flex items-center"
+            onClick={() => {
+              Promise.all(
+                todos
+                  .filter((e) => e.complete)
+                  .map(async ({ id }) => {
+                    await fetch(
+                      `https://63288bff9a053ff9aaba5f25.mockapi.io/crud/${id}`,
+                      {
+                        method: "DELETE",
+                      }
+                    )
+                      .then(async (res) => {
+                        return res;
+                      })
+                      .then((data) => {
+                        return data.status;
+                      });
+                  })
+              );
+            }}
+          >
+            Delete done tasks
+          </button>
+          <button
+            className="flex justify-center btn inline-block  xl:w-[48%] px-6 py-2.5 bg-red-600 text-white font-medium text-xs leading-tight uppercase  hover:bg-red-700 focus:bg-red-700   focus:outline-none focus:ring-0 active:bg-red-800  transition duration-150 ease-in-out flex items-center"
+            onClick={() => {
+              Promise.all(
+                todos.map(async ({ id }) => {
+                  await fetch(
+                    `https://63288bff9a053ff9aaba5f25.mockapi.io/crud/${id}`,
+                    {
+                      method: "DELETE",
+                    }
+                  )
+                    .then(async (res) => {
+                      return res;
+                    })
+                    .then((data) => {
+                      return data.status;
+                    });
+                })
+              );
+            }}
+          >
+            Delete all tasks
+          </button>
+        </div>
       </div>
     </div>
   );
