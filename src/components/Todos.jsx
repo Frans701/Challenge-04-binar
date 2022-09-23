@@ -16,22 +16,24 @@ export const Todos = ({ name, id, onDelete, complete }) => {
 
   return (
     <div>
-      <div className="flex mt-4 justify-center">
+      <div className="flex mt-3 justify-between w-full border p-3">
         <div className="user-name">{name}</div>
-        <div className="user-name">{complete}</div>
-        <div className="ml-4">
-          <button
-            class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-4 rounded"
-            onClick={handleEdit}
-          >
-            Edit
-          </button>
-          <button
-            class="ml-4 bg-red-700 text-white font-bold py-1 px-4 rounded"
-            onClick={handleDelete}
-          >
-            Delete
-          </button>
+        <div>
+          <div className="user-name">{complete}</div>
+          <div className="ml-3">
+            <button
+              class="bg-yellow-400 hover:bg-yellow-700 font-medium py-1 px-4 rounded"
+              onClick={handleEdit}
+            >
+              Edit
+            </button>
+            <button
+              class="ml-2 bg-red-700 text-white font-medium py-1 px-4 rounded"
+              onClick={handleDelete}
+            >
+              Delete
+            </button>
+          </div>
         </div>
       </div>
     </div>
