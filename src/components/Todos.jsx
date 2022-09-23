@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-export const Todos = ({ name, id, onDelete, complete }) => {
+export const Todos = ({ name, id, onDelete, complete, handleUpdateCheck }) => {
   const [isEdit, setIsEdit] = useState(false);
   const redirect = useNavigate();
 
@@ -14,21 +14,56 @@ export const Todos = ({ name, id, onDelete, complete }) => {
     onDelete(id);
   };
 
+  const handleCheck = (id, data) => {
+    handleUpdateCheck(id, data);
+  };
+
   return (
     <div>
       <div className="flex mt-3 justify-between w-full border p-3">
-        <div className="user-name">{name}</div>
+        <p
+          style={
+            complete
+              ? {
+                  textDecoration: "line-through",
+
+                  color: "red",
+                }
+              : { textDecoration: "none" }
+          }
+        >
+          <div className="user-name">{name}</div>
+        </p>
+
         <div>
-          <div className="user-name">{complete}</div>
-          <div className="ml-3">
+          <div className="flex items-center">
+            {complete === true ? (
+              <input
+                id="default-checkbox"
+                type="checkbox"
+                value={complete}
+                defaultChecked
+                onChange={() => handleCheck(id, complete)}
+                class="block w-4 h-4 text-blue-600 bg-gray-100 rounded border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+              />
+            ) : (
+              <input
+                id="default-checkbox"
+                type="checkbox"
+                value={complete}
+                onChange={() => handleCheck(id, complete)}
+                class="block w-4 h-4 text-blue-600 bg-gray-100 rounded border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+              />
+            )}
+
             <button
-              class="bg-yellow-400 hover:bg-yellow-700 font-medium py-1 px-4 rounded"
+              class=" block ml-2 bg-yellow-400 hover:bg-yellow-700 font-medium px-4 rounded"
               onClick={handleEdit}
             >
               Edit
             </button>
             <button
-              class="ml-2 bg-red-700 text-white font-medium py-1 px-4 rounded"
+              class="block ml-2 bg-red-700 text-white font-medium px-2 rounded"
               onClick={handleDelete}
             >
               Delete

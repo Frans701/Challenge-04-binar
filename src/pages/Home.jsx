@@ -46,6 +46,27 @@ export default function Home() {
       .catch((error) => console.log(error));
   };
 
+  const handleUpdateCheck = async (id, data) => {
+    await fetch(`https://63288bff9a053ff9aaba5f25.mockapi.io/crud/${id}`, {
+      method: "PUT",
+      body: JSON.stringify({
+        complete: !data,
+      }),
+      headers: {
+        "Content-type": "application/json; charset=UTF-8",
+      },
+    })
+      .then((response) => {
+        if (response.status !== 200) {
+          return;
+        } else {
+          setRefetch(true);
+          return response.json();
+        }
+      })
+      .catch((error) => console.log(error));
+  };
+
   const handleAdd = () => {
     redirect(`/add`);
   };
@@ -171,6 +192,7 @@ export default function Home() {
             name={user.task}
             complete={user.complete}
             onDelete={onDelete}
+            handleUpdateCheck={handleUpdateCheck}
           />
         ))}
       </div>
