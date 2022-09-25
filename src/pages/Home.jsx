@@ -1,9 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Todos } from "../components/Todos";
-import { AddTodos } from "../components/AddTodos";
 import "../App.css";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
 
 export default function Home() {
   const [todos, setTodos] = useState([]);
@@ -107,6 +105,45 @@ export default function Home() {
       .catch((error) => console.log(error));
   };
 
+  const deleteSelected = () => {
+    Promise.all(
+      todos
+        .filter((e) => e.complete)
+        .map(async ({ id }) => {
+          await fetch(
+            `https://63288bff9a053ff9aaba5f25.mockapi.io/crud/${id}`,
+            {
+              method: "DELETE",
+            }
+          )
+            .then(async (res) => {
+              setRefetch(true);
+              return res;
+            })
+            .then((data) => {
+              return data.status;
+            });
+        })
+    );
+  };
+
+  const deleteAll = () => {
+    Promise.all(
+      todos.map(async ({ id }) => {
+        await fetch(`https://63288bff9a053ff9aaba5f25.mockapi.io/crud/${id}`, {
+          method: "DELETE",
+        })
+          .then(async (res) => {
+            setRefetch(true);
+            return res;
+          })
+          .then((data) => {
+            return data.status;
+          });
+      })
+    );
+  };
+
   return (
     <div className="App">
       <div className="container p-4 w-[750px] mx-auto">
@@ -114,7 +151,7 @@ export default function Home() {
         <div className="mb-3 border border-gray p-4 mt-4">
           <div className="input-group flex w-96 mb-4">
             <button
-              className="btn inline-block px-6 py-2.5 bg-blue-600 text-white font-medium text-xs leading-tight uppercase  hover:bg-blue-700 focus:bg-blue-700   focus:outline-none focus:ring-0 active:bg-blue-800  transition duration-150 ease-in-out flex items-center"
+              className="btn px-6 py-2.5 bg-blue-600 text-white font-medium text-xs leading-tight uppercase  hover:bg-blue-700 focus:bg-blue-700   focus:outline-none focus:ring-0 active:bg-blue-800  transition duration-150 ease-in-out flex items-center"
               onClick={() => handleSearch()}
             >
               <svg
@@ -146,13 +183,13 @@ export default function Home() {
           </div>
           <div className="flex justify-between">
             <button
-              className="flex justify-center btn inline-block  xl:w-96 px-6 py-2.5 bg-blue-600 text-white font-medium text-xs leading-tight uppercase  hover:bg-blue-700 focus:bg-blue-700   focus:outline-none focus:ring-0 active:bg-blue-800  transition duration-150 ease-in-out flex items-center"
+              className=" justify-center btn   xl:w-96 px-6 py-2.5 bg-blue-600 text-white font-medium text-xs leading-tight uppercase  hover:bg-blue-700 focus:bg-blue-700   focus:outline-none focus:ring-0 active:bg-blue-800  transition duration-150 ease-in-out flex items-center"
               onClick={() => handleSearch()}
             >
               Search
             </button>
             <button
-              className="flex justify-center btn inline-block  xl:w-[250px] px-6 py-2.5 bg-blue-600 text-white font-medium text-xs leading-tight uppercase  hover:bg-blue-700 focus:bg-blue-700   focus:outline-none focus:ring-0 active:bg-blue-800  transition duration-150 ease-in-out flex items-center"
+              className=" justify-center btn   xl:w-[250px] px-6 py-2.5 bg-blue-600 text-white font-medium text-xs leading-tight uppercase  hover:bg-blue-700 focus:bg-blue-700   focus:outline-none focus:ring-0 active:bg-blue-800  transition duration-150 ease-in-out flex items-center"
               onClick={handleAdd}
             >
               Add
@@ -164,20 +201,20 @@ export default function Home() {
         <div className="mt-3">
           <div className="flex justify-between">
             <button
-              className="flex justify-center btn inline-block  xl:w-[200px] px-6 py-2.5 bg-blue-600 text-white font-medium text-xs leading-tight uppercase  hover:bg-blue-700 focus:bg-blue-700   focus:outline-none focus:ring-0 active:bg-blue-800  transition duration-150 ease-in-out flex items-center"
+              className=" justify-center btn   xl:w-[200px] px-6 py-2.5 bg-blue-600 text-white font-medium text-xs leading-tight uppercase  hover:bg-blue-700 focus:bg-blue-700   focus:outline-none focus:ring-0 active:bg-blue-800  transition duration-150 ease-in-out flex items-center"
               onClick={() => handleSearch()}
             >
               All
             </button>
 
             <button
-              className="flex justify-center btn inline-block  xl:w-[200px] px-6 py-2.5 bg-blue-600 text-white font-medium text-xs leading-tight uppercase  hover:bg-blue-700 focus:bg-blue-700   focus:outline-none focus:ring-0 active:bg-blue-800  transition duration-150 ease-in-out flex items-center"
+              className=" justify-center btn   xl:w-[200px] px-6 py-2.5 bg-blue-600 text-white font-medium text-xs leading-tight uppercase  hover:bg-blue-700 focus:bg-blue-700   focus:outline-none focus:ring-0 active:bg-blue-800  transition duration-150 ease-in-out flex items-center"
               onClick={() => handleDone()}
             >
               Done
             </button>
             <button
-              className="flex justify-center btn inline-block  xl:w-[200px] px-6 py-2.5 bg-blue-600 text-white font-medium text-xs leading-tight uppercase  hover:bg-blue-700 focus:bg-blue-700   focus:outline-none focus:ring-0 active:bg-blue-800  transition duration-150 ease-in-out flex items-center"
+              className=" justify-center btn   xl:w-[200px] px-6 py-2.5 bg-blue-600 text-white font-medium text-xs leading-tight uppercase  hover:bg-blue-700 focus:bg-blue-700   focus:outline-none focus:ring-0 active:bg-blue-800  transition duration-150 ease-in-out flex items-center"
               onClick={() => handleTodo()}
             >
               Todo
@@ -198,49 +235,17 @@ export default function Home() {
 
         <div className="flex justify-between mt-3">
           <button
-            className="flex justify-center btn inline-block  xl:w-[48%] px-6 py-2.5 bg-red-600 text-white font-medium text-xs leading-tight uppercase  hover:bg-red-700 focus:bg-red-700   focus:outline-none focus:ring-0 active:bg-red-800  transition duration-150 ease-in-out flex items-center"
+            className=" justify-center btn   xl:w-[48%] px-6 py-2.5 bg-red-600 text-white font-medium text-xs leading-tight uppercase  hover:bg-red-700 focus:bg-red-700   focus:outline-none focus:ring-0 active:bg-red-800  transition duration-150 ease-in-out flex items-center"
             onClick={() => {
-              Promise.all(
-                todos
-                  .filter((e) => e.complete)
-                  .map(async ({ id }) => {
-                    await fetch(
-                      `https://63288bff9a053ff9aaba5f25.mockapi.io/crud/${id}`,
-                      {
-                        method: "DELETE",
-                      }
-                    )
-                      .then(async (res) => {
-                        return res;
-                      })
-                      .then((data) => {
-                        return data.status;
-                      });
-                  })
-              );
+              deleteSelected();
             }}
           >
             Delete done tasks
           </button>
           <button
-            className="flex justify-center btn inline-block  xl:w-[48%] px-6 py-2.5 bg-red-600 text-white font-medium text-xs leading-tight uppercase  hover:bg-red-700 focus:bg-red-700   focus:outline-none focus:ring-0 active:bg-red-800  transition duration-150 ease-in-out flex items-center"
+            className="justify-center btn   xl:w-[48%] px-6 py-2.5 bg-red-600 text-white font-medium text-xs leading-tight uppercase  hover:bg-red-700 focus:bg-red-700   focus:outline-none focus:ring-0 active:bg-red-800  transition duration-150 ease-in-out flex items-center"
             onClick={() => {
-              Promise.all(
-                todos.map(async ({ id }) => {
-                  await fetch(
-                    `https://63288bff9a053ff9aaba5f25.mockapi.io/crud/${id}`,
-                    {
-                      method: "DELETE",
-                    }
-                  )
-                    .then(async (res) => {
-                      return res;
-                    })
-                    .then((data) => {
-                      return data.status;
-                    });
-                })
-              );
+              deleteAll();
             }}
           >
             Delete all tasks
